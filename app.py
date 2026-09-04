@@ -157,8 +157,9 @@ with tab_archivo:
         st.image(
             image,
             caption="Imagen cargada",
-            use_column_width=True,
+            width="stretch",
         )
+
 
         if st.button("Predecir imagen subida"):
             result = predict_from_image(image)

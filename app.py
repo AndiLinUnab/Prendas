@@ -4,6 +4,8 @@ import numpy as np
 import streamlit as st
 from PIL import Image
 from tensorflow import keras
+from streamlit_drawable_canvas import st_canvas
+
 
 st.set_page_config(page_title="Predictor de prendas", page_icon="👕", layout="wide")
 
@@ -66,8 +68,8 @@ with st.container():
     with tab_dibujo:
         st.subheader("Dibujo en canvas")
 
-        canvas = st.canvas(
-            fill_Color="black",
+        canvas = st_canvas(
+            fill_color="black",
             stroke_width=10,
             stroke_color="white",
             background_color="black",

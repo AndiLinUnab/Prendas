@@ -3,3 +3,5 @@ numpy>=1.26.0
 Pillow>=10.0.0
 tensorflow==2.20.0
 keras==3.13.0
+streamlit-drawable-canvas
+

@@ -81,26 +81,39 @@ with st.container():
         )
 
         if st.button("Predecir desde el dibujo"):
-            if canvas is not None and canvas.image_data is not None:
-                image_data = canvas.image_data
-                rgb = image_data[:, :, :3]
-                gray = np.mean(rgb, axis=2).astype(np.uint8)
-                pil_image = Image.fromarray(gray)
-                result = predict_from_image(pil_image)
+            try:
+                if canvas is not None:
+                    image_data = canvas.image_data
 
-                if result is not None:
-                    pred_index, confidence = result
-                    st.success(
-                        f"Predicción: {CLASS_NAMES[pred_index]} ({confidence * 100:.1f}%)"
-                    )
-                    st.bar_chart(np.asarray([confidence]))
+                    if image_data is not None:
+                        rgb = image_data[:, :, :3]
+                        gray = np.mean(rgb, axis=2).astype(np.uint8)
+                        pil_image = Image.fromarray(gray)
+
+                        result = predict_from_image(pil_image)
+
+                        if result is not None:
+                            pred_index, confidence = result
+
+                            st.success(
+                                f"Predicción: {CLASS_NAMES[pred_index]} "
+                                f"({confidence * 100:.1f}%)"
+                            )
+
+                            st.bar_chart(np.asarray([confidence]))
+                        else:
+                            st.warning("No se pudo cargar el modelo.")
+                    else:
+                        st.warning("Dibuja algo antes de predecir.")
                 else:
-                    st.warning("No se pudo cargar el modelo.")
-            else:
-                st.warning("Dibuja algo antes de predecir.")
+                    st.warning("Dibuja algo antes de predecir.")
+
+            except RuntimeError:
+                st.warning("Dibuja algo en el canvas antes de predecir.")
 
     with tab_archivo:
         st.subheader("Subir imagen")
+
         uploaded_file = st.file_uploader(
             "Selecciona una imagen de la prenda",
             type=["png", "jpg", "jpeg"],
@@ -108,18 +121,28 @@ with st.container():
 
         if uploaded_file is not None:
             image = Image.open(uploaded_file)
-            st.image(image, caption="Imagen cargada", use_column_width=True)
+
+            st.image(
+                image,
+                caption="Imagen cargada",
+                use_column_width=True,
+            )
 
             if st.button("Predecir imagen subida"):
                 result = predict_from_image(image)
+
                 if result is not None:
                     pred_index, confidence = result
+
                     st.success(
-                        f"Predicción: {CLASS_NAMES[pred_index]} ({confidence * 100:.1f}%)"
+                        f"Predicción: {CLASS_NAMES[pred_index]} "
+                        f"({confidence * 100:.1f}%)"
                     )
+
                     st.bar_chart(np.asarray([confidence]))
                 else:
                     st.warning("No se pudo cargar el modelo.")
+
 
 st.markdown("---")
 st.subheader("Instrucciones")

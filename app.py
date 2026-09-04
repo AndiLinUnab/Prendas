@@ -28,7 +28,7 @@ CLASS_NAMES = [
 ]
 
 
-MODEL_PATH = "prendas/prendas.keras"
+MODEL_PATH = "prendas.keras"
 
 
 @st.cache_resource
